@@ -1,20 +1,41 @@
 import { Server } from "http";
-import express from "express";
 import mongoose from "mongoose";
-const app = express();
-const port = 5000;
+import app from "./app.js";
+import { envVars } from "./app/config/env.js";
 let server: Server;
 
 async function startServer() {
   try {
     await mongoose.connect(
-      "mongodb+srv://tour-package:tour-package@sajib.chgzwan.mongodb.net/tour-package"
+      envVars.DB_URL
     );
-
-    server = app.listen(port, () => {
+    console.log("server connected");
+    server = app.listen(envVars.PORT, () => {
       console.log("Server Is Listening....");
     });
   } catch (error) {
     console.log(error);
   }
 }
+
+process.on("SIGTERM", (err) => {
+  console.log("SIGTERM  detected... Server shutting down...", err);
+  if (server) {
+    server.close(() => {
+      process.exit(1);
+    });
+  }
+  process.exit(1)
+});
+
+
+process.on("SIGINT", (err) => {
+  console.log("SIGINT  detected... Server shutting down...", err);
+  if (server) {
+    server.close(() => {
+      process.exit(1);
+    });
+  }
+  process.exit(1)
+});
+startServer()
