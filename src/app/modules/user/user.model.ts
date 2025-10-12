@@ -1,7 +1,7 @@
 import { model, Schema } from "mongoose";
-import type { IUser } from "./user.interface.js";
+import { IActive, Role, type IUser } from "./user.interface.js";
 
-const userSchema = new Schema({
+const userSchema = new Schema<IUser>({
   name: {
     type: String,
     required: true,
@@ -13,6 +13,23 @@ const userSchema = new Schema({
   password: {
     type: String,
   },
+  role: {
+    type: String,
+    enum: Object.keys(Role),
+    default: Role.USER,
+  },
+  auths: [
+    {
+      provider: {
+        type: String,
+        required: true,
+      },
+      providerId: {
+        type: String,
+      },
+    },
+  ],
+
   phone: {
     type: String,
   },
@@ -26,7 +43,9 @@ const userSchema = new Schema({
     type: Boolean,
   },
   isActive: {
-    type: Boolean,
+    type: String,
+    enum: Object.keys(IActive),
+    default: IActive.ACTIVE,
   },
 });
 
