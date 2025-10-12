@@ -4,7 +4,7 @@
   "main": "./src/server.ts",
   "type": "module",
   "scripts": {
-    "dev": "tsnd --respawn ./src/server.ts",
+    "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
     "lint": "npx eslint ./src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
