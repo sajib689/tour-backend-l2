@@ -10,7 +10,7 @@ const moduleRoutes = [
   },
 ];
 
-// ✅ Use a different variable name
+//  Use a different variable name
 moduleRoutes.forEach((r) => {
   router.use(r.path, r.route);
 });
