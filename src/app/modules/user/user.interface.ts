@@ -1,5 +1,5 @@
 import type { Types } from "mongoose";
-
+// Enum
 export enum Role {
   SUPER_ADMIN = "SUPER_ADMIN",
   ADMIN = "ADMIN",
