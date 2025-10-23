@@ -5,5 +5,6 @@ import { userController } from "./user.controller.js"
 const userRouter = express.Router()
 // user routes
 userRouter.post("/register", userController.createUser)
+userRouter.get("/all-users", userController.getAllUsersController)
 
 export default userRouter
