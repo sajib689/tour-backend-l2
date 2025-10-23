@@ -9,7 +9,6 @@ async function startServer() {
     await mongoose.connect(
       envVars.DB_URL
     );
-    console.log("server connected");
     server = app.listen(envVars.PORT, () => {
       console.log("Server Is Listening....");
     });
