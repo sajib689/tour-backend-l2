@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status-codes";
 import { UserService } from "./user.service.js";
 import { catchAsync } from "../../utlis/catchAsync.js";
+import { sendResponse } from "../../utlis/sendResponse.js";
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -15,9 +16,10 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const getAllUsersController = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const getAllUsersController = catchAsync(async (req: Request, res: Response) => {
   const users = await UserService.getAllUsers()
-  res.status(httpStatus.OK).json({
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
     success: true,
     message: "All Users Retrieved Successfully",
     data: users
