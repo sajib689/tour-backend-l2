@@ -8,5 +8,5 @@ const userRouter = express.Router()
 // user routes
 userRouter.post("/register",validateZodSchema(userZod), userController.createUser)
 userRouter.get("/all-users", userController.getAllUsersController)
-
+userRouter.get("/single-user/:id", userController.getSingleController)
 export default userRouter

@@ -4,7 +4,9 @@ import { UserService } from "./user.service.js";
 import { catchAsync } from "../../utlis/catchAsync.js";
 import { sendResponse } from "../../utlis/sendResponse.js";
 import { User } from "./user.model.js";
+import AppError from "../../errorHelper/AppError.js";
 
+// create user controller and validate email
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {email} = req.body
@@ -29,6 +31,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+// get all users controller
 const getAllUsersController = catchAsync(async (req: Request, res: Response) => {
   const users = await UserService.getAllUsers()
   sendResponse(res, {
@@ -39,9 +42,24 @@ const getAllUsersController = catchAsync(async (req: Request, res: Response) => 
   })
 })
 
+// get single user controller
+const getSingleController = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+   if (!id) {
+    throw new AppError(httpStatus.BAD_REQUEST, "User ID is required");
+  }
+  const user = await UserService.getSingleUser(id)
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Single user retrieved successfully",
+    data: user
+  })
+})
 
 
 export const userController = {
   createUser,
-  getAllUsersController
+  getAllUsersController,
+  getSingleController
 };
