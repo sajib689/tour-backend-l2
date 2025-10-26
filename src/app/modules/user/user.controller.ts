@@ -3,9 +3,22 @@ import httpStatus from "http-status-codes";
 import { UserService } from "./user.service.js";
 import { catchAsync } from "../../utlis/catchAsync.js";
 import { sendResponse } from "../../utlis/sendResponse.js";
+import { User } from "./user.model.js";
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const {email} = req.body
+      // Check if email exists
+    if (email) {
+      const existingUser = await User.findOne({ email });
+
+      if (existingUser) {
+        return res.status(httpStatus.BAD_REQUEST).json({
+          success: false,
+          message: `This email ${email} already exists in our database.`,
+        });
+      }
+    }
     const user = await UserService.createUserService(req.body);
     res.status(httpStatus.CREATED).json({
       message: "User Created Successfully",
