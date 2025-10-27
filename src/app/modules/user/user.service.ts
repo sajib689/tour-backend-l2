@@ -31,30 +31,6 @@ const getSingleUser = async (id: string) => {
   return user
 }
 
-// login user controller
-
-const loginUserController = async(payload: Partial<IUser>) => {
-  const {email, password} = payload
-  if(!email || !password){
-    throw new AppError(
-    httpStatus.BAD_REQUEST,
-    "Please check user credentials"
-    )
-  }
-  const user = await User.findOne({email}).select("+password")
-
-  if(!user) {
-    throw new AppError(httpStatus.UNAUTHORIZED, "User unauthorized")
-  }
-
-  const isMatchPassword = await bcrypt.compare(password, user?.password as string)
-  if(!isMatchPassword){
-    throw new AppError(httpStatus.UNAUTHORIZED, "invalid email or password")
-  }
-
-  return user
-
-}
 
 // update user service
 
@@ -80,7 +56,6 @@ export const UserService = {
   createUserService,
   getAllUsers,
   getSingleUser,
-  loginUserController,
   updateUserService
 };
 
