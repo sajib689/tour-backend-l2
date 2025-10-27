@@ -13,7 +13,6 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
       // Check if email exists
     if (email) {
       const existingUser = await User.findOne({ email });
-
       if (existingUser) {
         return res.status(httpStatus.BAD_REQUEST).json({
           success: false,

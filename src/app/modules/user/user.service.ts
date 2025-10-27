@@ -1,9 +1,16 @@
-import type { IUser } from "./user.interface.js";
+import type { IAuthProvider, IUser } from "./user.interface.js";
 import { User } from "./user.model.js";
 
 // create user service
 const createUserService = async (payload: Partial<IUser>) => {
-  const user = await User.create(payload);
+  const {email, ...rest} = payload
+
+  const authProvider: IAuthProvider = {provider: "credentials", providerId: email as string}
+  const user = await User.create({
+    email,
+    auths: [authProvider],
+    ...rest
+  });
   return user;
 };
 
