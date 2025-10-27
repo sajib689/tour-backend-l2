@@ -56,9 +56,40 @@ const getSingleController = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+// login user controller
+const loginUserController = async (req: Request, res: Response) => {
+  const {email, password} = req.body
+  const user = await UserService.loginUserController({email,password})
+   sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User login successfully!",
+    data: user
+  })
+}
+
+// update user controller
+const updateUserController =catchAsync( async (req: Request, res: Response) => {
+  const {id} = req.params
+  const updateData = req.body;
+
+    if (!id) {
+    throw new AppError(httpStatus.BAD_REQUEST, "User ID is required in URL params.");
+  }
+
+  const user = await UserService.updateUserService(id,updateData)
+  sendResponse(res,{
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User profile updated successfully!",
+    data: user
+  })
+})
 
 export const userController = {
   createUser,
   getAllUsersController,
-  getSingleController
+  getSingleController,
+  loginUserController,
+  updateUserController
 };

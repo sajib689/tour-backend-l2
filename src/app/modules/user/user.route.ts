@@ -9,4 +9,6 @@ const userRouter = express.Router()
 userRouter.post("/register",validateZodSchema(userZod), userController.createUser)
 userRouter.get("/all-users", userController.getAllUsersController)
 userRouter.get("/single-user/:id", userController.getSingleController)
+userRouter.post("/login", userController.loginUserController)
+userRouter.put("/update/:id", userController.updateUserController)
 export default userRouter
