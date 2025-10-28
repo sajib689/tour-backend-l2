@@ -18,7 +18,7 @@ const loginUserService = async(payload: Partial<IUser>) => {
   const user = await User.findOne({email}).select("+password").lean();
 
   if(!user) {
-    throw new AppError(httpStatus.UNAUTHORIZED, "User unauthorized")
+    throw new AppError(httpStatus.UNAUTHORIZED, "User not found")
   }
 
   const isMatchPassword = await bcrypt.compare(password, user?.password as string)
