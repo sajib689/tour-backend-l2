@@ -12,7 +12,7 @@ export default defineConfig(
   {
     rules: {
       "no-unused-vars": "off",
-      "no-console": "warn",
+      "no-console": "off",
       "@typescript-eslint/no-unused-vars": "error",
     },
   }

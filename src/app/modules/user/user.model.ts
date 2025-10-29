@@ -2,6 +2,9 @@ import { model, Schema } from "mongoose";
 import { IActive, Role, type IUser } from "./user.interface.js";
 
 const userSchema = new Schema<IUser>({
+   id: {
+    type: String
+   },
   name: {
     type: String,
     required: true,
