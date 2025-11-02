@@ -2,6 +2,7 @@ import { Server } from "http";
 import mongoose from "mongoose";
 import app from "./app.js";
 import { envVars } from "./app/config/env.js";
+import { seedSuperAdmin } from "./app/utlis/seedSuperAdmin.js";
 let server: Server;
 
 async function startServer() {
@@ -37,4 +38,9 @@ process.on("SIGINT", (err) => {
   }
   process.exit(1)
 });
-startServer()
+
+
+(async () => {
+   await startServer()
+   await seedSuperAdmin()
+})()

@@ -26,7 +26,8 @@ export const seedSuperAdmin = async () => {
             auths: [authProvider],
             isVerified: true,
         }
-
+        const user = await User.create(payload)
+        console.log(user, "Super admin created successfully!");
     } catch(error){
         console.log(error);
     }
