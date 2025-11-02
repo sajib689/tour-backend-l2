@@ -6,6 +6,8 @@ import { User } from "../user/user.model.js";
 import bcrypt from "bcryptjs";
 import type { IUser } from "../user/user.interface.js";
 import { generatorAccessToken } from "../../utlis/genarateAccessToken.js";
+
+
 // login user service
 const loginUserService = async(payload: Partial<IUser>) => {
   const {email, password} = payload

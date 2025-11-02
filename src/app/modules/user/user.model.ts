@@ -50,6 +50,10 @@ const userSchema = new Schema<IUser>({
     enum: Object.keys(IActive),
     default: IActive.ACTIVE,
   },
+  isVerified: {
+    type: Boolean,
+    default: false
+  }
 });
 
 export const User = model<IUser>("User", userSchema);
