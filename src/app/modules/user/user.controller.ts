@@ -6,7 +6,7 @@ import { sendResponse } from "../../utlis/sendResponse.js";
 import { User } from "./user.model.js";
 import AppError from "../../errorHelper/AppError.js";
 import { verifyToken } from "../../utlis/genarateAccessToken.js";
-import type { JwtPayload } from "jsonwebtoken";
+import { JwtPayload } from "jsonwebtoken";
 
 // create user controller and validate email
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -63,9 +63,8 @@ const getSingleController = catchAsync(async (req: Request, res: Response) => {
 // update user controller
 const updateUserController = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const accessToken = req.headers.authorization;
   const updateData = req.body;
-
+  const accessToken = req.headers.authorization;
   if (!id) {
     throw new AppError(400, "User ID is required in URL params.");
   }
@@ -79,14 +78,9 @@ const updateUserController = catchAsync(async (req: Request, res: Response) => {
       "JWT_TOKEN is not configured on the server."
     );
   }
-
-  const verify = verifyToken(accessToken as string, jwtSecret);
-
-  const user = await UserService.updateUserService(
-    id,
-    updateData,
-    verify as JwtPayload
-  );
+  const secretToken = process.env.JWT_TOKEN;
+  const verify = verifyToken(accessToken, secretToken as string) as JwtPayload;
+  const user = await UserService.updateUserService(id, updateData, verify);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
