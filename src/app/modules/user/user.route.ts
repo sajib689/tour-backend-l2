@@ -23,9 +23,11 @@ userRouter.get(
   adminJwtVerify,
   userController.getSingleController
 );
-userRouter.put(
-  "/update/:id",
+userRouter.patch(
+  "/:id",
+  validateZodSchema(userZod),
   adminJwtVerify,
+  userJwtVerify,
   userController.updateUserController
 );
 

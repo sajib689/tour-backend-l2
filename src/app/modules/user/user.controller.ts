@@ -64,6 +64,8 @@ const getSingleController = catchAsync(async (req: Request, res: Response) => {
 const updateUserController = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const accessToken = req.headers.authorization;
+  const updateData = req.body;
+
   if (!id) {
     throw new AppError(400, "User ID is required in URL params.");
   }
@@ -79,7 +81,6 @@ const updateUserController = catchAsync(async (req: Request, res: Response) => {
   }
 
   const verify = verifyToken(accessToken as string, jwtSecret);
-  const updateData = req.body;
 
   const user = await UserService.updateUserService(
     id,
