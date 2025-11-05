@@ -3,7 +3,7 @@ import httpStatus from "http-status-codes";
 import { User } from "../user/user.model.js";
 import bcrypt from "bcryptjs";
 import type { IUser } from "../user/user.interface.js";
-import { generatorAccessToken } from "../../utlis/genarateAccessToken.js";
+import { createToken } from "../../utlis/createToken.js";
 
 // login user service
 const loginUserService = async (payload: Partial<IUser>) => {
@@ -24,20 +24,11 @@ const loginUserService = async (payload: Partial<IUser>) => {
   if (!isMatchPassword) {
     throw new AppError(httpStatus.UNAUTHORIZED, "invalid email or password");
   }
-  const jwtPayload = {
-    email: user.email,
-    role: user.role,
-    userId: user._id,
-  };
-  const secretToken = process.env.JWT_TOKEN;
-  const accessToken = generatorAccessToken(
-    jwtPayload,
-    secretToken as string,
-    "7d"
-  );
-
+  const userTokens = await createToken(user);
+  delete user.password;
   return {
-    accessToken,
+    accessToken: userTokens.accessToken,
+    refreshToken: userTokens.refreshToken,
     user,
   };
 };
