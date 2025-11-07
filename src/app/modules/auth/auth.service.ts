@@ -2,8 +2,14 @@ import AppError from "../../errorHelper/AppError.js";
 import httpStatus from "http-status-codes";
 import { User } from "../user/user.model.js";
 import bcrypt from "bcryptjs";
-import type { IUser } from "../user/user.interface.js";
+import { IActive, type IUser } from "../user/user.interface.js";
 import { createToken } from "../../utlis/createToken.js";
+import {
+  generatorAccessToken,
+  verifyToken,
+} from "../../utlis/genarateAccessToken.js";
+import { envVars } from "../../config/env.js";
+import { JwtPayload } from "jsonwebtoken";
 
 // login user service
 const loginUserService = async (payload: Partial<IUser>) => {
@@ -33,6 +39,38 @@ const loginUserService = async (payload: Partial<IUser>) => {
   };
 };
 
+const createRefreshUserService = async (refreshToken: string) => {
+  const verifyRefreshToken = verifyToken(
+    refreshToken,
+    envVars.JWT_REFRESH_TOKEN
+  ) as JwtPayload;
+
+  if (!verifyRefreshToken) {
+    throw new AppError(httpStatus.UNAUTHORIZED, "Refresh token not found");
+  }
+  const isUserExist = await User.findOne({
+    email: verifyRefreshToken.email,
+  });
+  if (
+    isUserExist?.isActive === IActive.BLOCKED ||
+    isUserExist?.isActive === IActive.INACTIVE
+  ) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `User is ${isUserExist.isActive}`
+    );
+  }
+  const jwtPayload = {
+    email: isUserExist?.email,
+    role: isUserExist?.role,
+  };
+  const accessToken = generatorAccessToken(jwtPayload, envVars.JWT_TOKEN, "7d");
+  return {
+    accessToken,
+  };
+};
+
 export const authService = {
   loginUserService,
+  createRefreshUserService,
 };
