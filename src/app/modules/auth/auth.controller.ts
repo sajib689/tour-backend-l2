@@ -4,6 +4,7 @@ import AppError from "../../errorHelper/AppError.js";
 import httpStatus from "http-status-codes";
 import { authService } from "./auth.service.js";
 import { sendResponse } from "../../utlis/sendResponse.js";
+import { setToken } from "../../utlis/setToken.js";
 
 // login user controller
 const loginUserController = catchAsync(async (req: Request, res: Response) => {
@@ -17,10 +18,11 @@ const loginUserController = catchAsync(async (req: Request, res: Response) => {
   }
 
   const user = await authService.loginUserService({ email, password });
-  res.cookie("refreshToken", user.refreshToken, {
-    httpOnly: true,
-    secure: false,
-  });
+  // res.cookie("refreshToken", user.refreshToken, {
+  //   httpOnly: true,
+  //   secure: false,
+  // });
+  setToken(res, user);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -35,6 +37,7 @@ const getNewAccessToken = catchAsync(async (req: Request, res: Response) => {
   const tokenInfo = await authService.createRefreshUserService(
     refreshToken as string
   );
+  setToken(res, tokenInfo);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
