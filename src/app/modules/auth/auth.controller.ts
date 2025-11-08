@@ -17,7 +17,10 @@ const loginUserController = catchAsync(async (req: Request, res: Response) => {
   }
 
   const user = await authService.loginUserService({ email, password });
-
+  res.cookie("refreshToken", user.refreshToken, {
+    httpOnly: true,
+    secure: false,
+  });
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -27,7 +30,7 @@ const loginUserController = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getNewAccessToken = catchAsync(async (req: Request, res: Response) => {
-  const refreshToken = req.headers.authorization;
+  const refreshToken = req.cookies.authorization;
 
   const tokenInfo = await authService.createRefreshUserService(
     refreshToken as string
