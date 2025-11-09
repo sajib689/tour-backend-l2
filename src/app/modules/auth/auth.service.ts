@@ -39,6 +39,7 @@ const loginUserService = async (payload: Partial<IUser>) => {
   };
 };
 
+// refresh token get and set new token service
 const createRefreshUserService = async (refreshToken: string) => {
   const verifyRefreshToken = verifyToken(
     refreshToken,

@@ -1,10 +1,11 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { catchAsync } from "../../utlis/catchAsync.js";
 import AppError from "../../errorHelper/AppError.js";
 import httpStatus from "http-status-codes";
 import { authService } from "./auth.service.js";
 import { sendResponse } from "../../utlis/sendResponse.js";
 import { setToken } from "../../utlis/setToken.js";
+import { clearToken } from "../../utlis/clearToken.js";
 
 // login user controller
 const loginUserController = catchAsync(async (req: Request, res: Response) => {
@@ -31,6 +32,7 @@ const loginUserController = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// create new access token using by refresh token
 const getNewAccessToken = catchAsync(async (req: Request, res: Response) => {
   const refreshToken = req.cookies.authorization;
 
@@ -41,12 +43,29 @@ const getNewAccessToken = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "User login successful!",
+    message: "New token creation successful!",
     data: tokenInfo,
   });
 });
 
+// logout controller
+const logoutController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    clearToken(res, {
+      accessToken: "accessToken",
+      refreshToken: "refreshToken",
+    });
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Logout successfully!",
+      data: null,
+    });
+    next();
+  }
+);
 export const authController = {
   loginUserController,
   getNewAccessToken,
+  logoutController,
 };
