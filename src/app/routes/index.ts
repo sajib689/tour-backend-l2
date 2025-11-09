@@ -6,13 +6,13 @@ export const router = Router();
 
 const moduleRoutes = [
   {
-    path: "/user",
+    path: "/",
     route: userRouter,
   },
   {
     path: "/auth",
-    route: authRouter
-  }
+    route: authRouter,
+  },
 ];
 
 //  Use a different variable name

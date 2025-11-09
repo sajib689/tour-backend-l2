@@ -71,7 +71,28 @@ const createRefreshUserService = async (refreshToken: string) => {
   };
 };
 
+// reset password service
+
+const resetPasswordService = async (
+  newPassword: string,
+  oldPassword: string,
+  email: string
+) => {
+  const user = await User.findOne({ email: email });
+  if (!user || !user.password) {
+    throw new AppError(httpStatus.BAD_REQUEST, "User not found!");
+  }
+  const isMatch = await bcrypt.compare(oldPassword, user.password);
+  if (!isMatch) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Old password is incorrect!");
+  }
+  const hashPassword = await bcrypt.hash(newPassword, 10);
+  user.password = hashPassword;
+  await user.save();
+};
+
 export const authService = {
   loginUserService,
   createRefreshUserService,
+  resetPasswordService,
 };
