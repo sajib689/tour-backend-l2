@@ -6,20 +6,24 @@ import { notFoundErrorHandler } from "./app/middleware/notFoundErrorHandler.js";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 import expressSession from "express-session";
+import { envVars } from "./app/config/env.js";
+import "./app/config/passport.ts";
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
-app.use(passport.initialize());
-app.use(passport.session());
 app.use(
   expressSession({
-    secret: "",
+    secret: envVars.Express_SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
   })
 );
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use("/api/v1", router);
 
 app.use(globalErrorHandler);

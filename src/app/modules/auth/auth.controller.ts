@@ -9,7 +9,6 @@ import { clearToken } from "../../utlis/clearToken.js";
 import { JwtPayload } from "jsonwebtoken";
 import { verifyToken } from "../../utlis/genarateAccessToken.js";
 import { envVars } from "../../config/env.js";
-import passport from "passport";
 import { createToken } from "../../utlis/createToken.js";
 
 // login user controller
@@ -103,15 +102,11 @@ const resetPasswordController = catchAsync(
     });
   }
 );
-const googleLoginController = catchAsync(
-  async (req: Request, res: Response) => {
-    passport.authenticate("google", { scope: ["profile", "email"] })(req, res);
-  }
-);
 
 const googleCallbackController = catchAsync(
   async (req: Request, res: Response) => {
     const user = req.user;
+    console.log(user);
     if (!user) {
       throw new AppError(httpStatus.NOT_FOUND, "User not found!");
     }
@@ -126,6 +121,5 @@ export const authController = {
   getNewAccessToken,
   logoutController,
   resetPasswordController,
-  googleLoginController,
   googleCallbackController,
 };
