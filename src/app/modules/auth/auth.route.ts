@@ -14,5 +14,7 @@ authRouter.post(
   userJwtVerify,
   authController.resetPasswordController
 );
+authRouter.get("/google", authController.googleLoginController);
+authRouter.get("/google/callback", authController.googleCallbackController);
 
 export default authRouter;
