@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request } from "express";
 import { authController } from "./auth.controller.js";
 import { adminJwtVerify } from "./../../middleware/adminJwtVerify";
 import { userJwtVerify } from "../../middleware/userJwtVerify.js";
@@ -15,10 +15,13 @@ authRouter.post(
   userJwtVerify,
   authController.resetPasswordController
 );
-authRouter.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
+authRouter.get("/google", async (req: Request) => {
+  const redirect = req.query.redirect || "/";
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    state: redirect as string,
+  });
+});
 
 authRouter.get(
   "/google/callback",

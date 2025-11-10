@@ -106,13 +106,23 @@ const resetPasswordController = catchAsync(
 const googleCallbackController = catchAsync(
   async (req: Request, res: Response) => {
     const user = req.user;
-    console.log(user);
+    let state = (req.query.state as string) || "";
+
+    // Remove leading slash
+    if (state.startsWith("/")) state = state.slice(1);
+
     if (!user) {
       throw new AppError(httpStatus.NOT_FOUND, "User not found!");
     }
+
+    // Create JWT tokens
     const tokenInfo = await createToken(user);
+
+    // Set cookies (cross-domain safe)
     setToken(res, tokenInfo);
-    res.redirect(envVars.FRONTEND_URL);
+
+    // Redirect to frontend with state
+    res.redirect(`${envVars.FRONTEND_URL}/${state}`);
   }
 );
 
