@@ -75,7 +75,7 @@ const updateUserController = catchAsync(async (req: Request, res: Response) => {
   if (!jwtSecret) {
     throw new AppError(
       httpStatus.INTERNAL_SERVER_ERROR,
-      "JWT_TOKEN is not configured on the server."
+      "JWT_TOKEN is not configured on the server!!!!!."
     );
   }
   const secretToken = process.env.JWT_TOKEN;
