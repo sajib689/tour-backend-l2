@@ -23,14 +23,16 @@ passport.use(
       done: VerifyCallback
     ) => {
       try {
+        // get the email from the profile
         const email = profile.emails?.[0].value;
-
+        // if is not email exits
         if (!email) {
           return done(null, false, { message: "No email found" });
         }
-
+        // if user email have then find one the email
         let user = await User.findOne({ email });
-
+        // if the email is not have then create the user account
+        // send the email,name,picture,role,isVerified,auth
         if (!user) {
           user = await User.create({
             email,
@@ -46,7 +48,7 @@ passport.use(
             ],
           });
         }
-
+        // then return when done null and the user details
         return done(null, user);
       } catch (error) {
         console.log("Google Strategy Error", error);
