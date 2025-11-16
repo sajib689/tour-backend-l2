@@ -38,11 +38,13 @@ const loginUserController = catchAsync(async (req: Request, res: Response) => {
 
 // create new access token using by refresh token
 const getNewAccessToken = catchAsync(async (req: Request, res: Response) => {
+  // get the token from the header from the client side
   const refreshToken = req.cookies.authorization;
 
   const tokenInfo = await authService.createRefreshUserService(
     refreshToken as string
   );
+  // set the access token
   setToken(res, tokenInfo);
   sendResponse(res, {
     statusCode: httpStatus.OK,
