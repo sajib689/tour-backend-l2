@@ -8,6 +8,33 @@ import {
 import { envVars } from "./env";
 import { User } from "../modules/user/user.model";
 import { Role } from "../modules/user/user.interface";
+import { Strategy as LocalStrategy } from "passport-local";
+import AppError from "./../errorHelper/AppError";
+import httpStatus from "http-status-codes";
+
+passport.use(
+  new LocalStrategy(
+    {
+      usernameField: "email",
+      passwordField: "password",
+    },
+    async (email: string, password: string, done: any) => {
+      try {
+        const isUserExist = await User.findOne({ email });
+        if (!isUserExist) {
+          throw new AppError(httpStatus.BAD_REQUEST, "User not found!");
+        }
+        // You might want to add password verification logic here
+        // For example, compare the provided password with the stored hashed password
+        // If the password is incorrect, return done(null, false, { message: "Incorrect password" });
+        return done(null, isUserExist);
+      } catch (error) {
+        console.log(error);
+        done(error);
+      }
+    }
+  )
+);
 
 passport.use(
   new GoogleStrategy(
